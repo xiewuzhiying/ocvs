@@ -1,32 +1,31 @@
 package io.github.xiewuzhiying.ocvs.bus.devices.rpc.item;
 
+import io.github.xiewuzhiying.ocvs.util.TableUtils;
 import li.cil.oc2r.api.bus.device.object.Callback;
-import li.cil.oc2r.common.bus.device.rpc.item.AbstractItemRPCDevice;
-import li.cil.oc2r.common.util.BlockLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
+import li.cil.oc2r.api.bus.device.object.NamedDevice;
+import li.cil.oc2r.api.bus.device.object.Parameter;
+import li.cil.oc2r.common.bus.device.util.IdentityProxy;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4dc;
-import org.joml.Quaterniondc;
-import org.joml.Vector3dc;
 import org.joml.Vector4d;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 import static java.lang.Math.asin;
 import static java.lang.Math.atan2;
 
-public final class ShipHandlerDevice extends AbstractItemRPCDevice {
+public class ShipHandlerDevice extends IdentityProxy<ServerShip> implements NamedDevice {
+    private final ServerShip ship;
 
-    Supplier<Optional<BlockLocation>> location;
-    ServerShip ship;
+    public ShipHandlerDevice(final ServerShip serverShip) {
+        super(serverShip);
+        this.ship = serverShip;
+    }
 
-    public ShipHandlerDevice(final ItemStack identity, final ServerShip ship) {
-        super(identity, "ship");
-        this.ship = ship;
+    @Override
+    public @NotNull Collection<String> getDeviceTypeNames() {
+        return Collections.singleton("ship_handler");
     }
 
     @Callback
@@ -50,12 +49,12 @@ public final class ShipHandlerDevice extends AbstractItemRPCDevice {
 
     @Callback
     public Map<String, Double> getOmega() {
-        return vectorToTable(ship.getOmega());
+        return TableUtils.vectorToTable(ship.getOmega());
     }
 
     @Callback
     public Map<String, Double> getQuaternion() {
-        return quatToTable(ship.getTransform().getShipToWorldRotation());
+        return TableUtils.quatToTable(ship.getTransform().getShipToWorldRotation());
     }
 
     @Callback
@@ -77,22 +76,22 @@ public final class ShipHandlerDevice extends AbstractItemRPCDevice {
 
     @Callback
     public Map<String, Double> getScale() {
-        return vectorToTable(ship.getTransform().getShipToWorldScaling());
+        return TableUtils.vectorToTable(ship.getTransform().getShipToWorldScaling());
     }
 
     @Callback
     public Map<String, Double> getShipyardPosition() {
-        return vectorToTable(ship.getTransform().getPositionInShip());
+        return TableUtils.vectorToTable(ship.getTransform().getPositionInShip());
     }
 
     @Callback
     public Map<String, Double> getVelocity() {
-        return vectorToTable(ship.getVelocity());
+        return TableUtils.vectorToTable(ship.getVelocity());
     }
 
     @Callback
     public Map<String, Double> getWorldspacePosition() {
-        return vectorToTable(ship.getTransform().getPositionInWorld());
+        return TableUtils.vectorToTable(ship.getTransform().getPositionInWorld());
     }
 
     @Callback
@@ -101,7 +100,7 @@ public final class ShipHandlerDevice extends AbstractItemRPCDevice {
     }
 
     @Callback
-    public void setName(String name) {
+    public void setName(@Parameter("name") final String name) {
         ship.setSlug(name);
     }
 
@@ -116,24 +115,5 @@ public final class ShipHandlerDevice extends AbstractItemRPCDevice {
         }
 
         return matrix.stream().toList();
-    }
-
-    @Callback
-    public static Map<String, Double> vectorToTable(Vector3dc vector) {
-        Map<String, Double> table = new HashMap<>();
-        table.put("x", vector.x());
-        table.put("y", vector.y());
-        table.put("z", vector.z());
-        return table;
-    }
-
-    @Callback
-    public static Map<String, Double> quatToTable(Quaterniondc quat) {
-        Map<String, Double> table = new HashMap<>();
-        table.put("x", quat.x());
-        table.put("y", quat.y());
-        table.put("z", quat.z());
-        table.put("w", quat.w());
-        return table;
     }
 }

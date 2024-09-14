@@ -51,11 +51,13 @@ public class OcvsMod {
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
 
     // Creates a new food item with the id "ocvs:example_id", nutrition 1 and saturation 2
-    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("ship_handler", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SHIP_HANDLER_ITEM = ITEMS.register("ship_handler", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> EXTENDED_SHIP_HANDLER_ITEM = ITEMS.register("extended_ship_handler", () -> new Item(new Item.Properties()));
 
     // Creates a creative tab with the id "ocvs:example_tab" for the example item, that is placed after the combat tab
-    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).icon(() -> EXAMPLE_ITEM.get().getDefaultInstance()).displayItems((parameters, output) -> {
-        output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).icon(() -> SHIP_HANDLER_ITEM.get().getDefaultInstance()).displayItems((parameters, output) -> {
+        output.accept(SHIP_HANDLER_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+        output.accept(EXTENDED_SHIP_HANDLER_ITEM.get());
     }).build());
 
     public OcvsMod() {

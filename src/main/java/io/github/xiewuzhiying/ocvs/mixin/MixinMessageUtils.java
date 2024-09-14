@@ -13,13 +13,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(MessageUtils.class)
-public final class MixinMessageUtils {
+public abstract class MixinMessageUtils {
     @WrapOperation(
             method = "withNearbyServerBlockEntityForInteraction",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/core/BlockPos;closerToCenterThan(Lnet/minecraft/core/Position;D)Z"
             ),
+            require = 0,
             remap = false
     )
     private static boolean replace(BlockPos blockPos, Position position, double v, Operation<Boolean> original, @Local ServerPlayer player) {

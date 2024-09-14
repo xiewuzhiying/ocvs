@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "ocvs:ship_handler"
+    "ocvs:ship_handler",
+    "ocvs:extended_ship_handler"
   ]
 }
